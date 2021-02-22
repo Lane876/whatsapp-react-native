@@ -9,11 +9,15 @@ export type ChatListItemProps = {
 export default function ChatListItem( props: ChatRoom) {
     const { chatRoom } = props
     const user = chatRoom.users[1]
+    console.log(user);
+    
 
     return (
         <View>
             <Image source={{uri: user.imageUri}} style={styles.avatar}/>
-            <Text>{chatRoom.lastMessage.content}</Text>
+            <Text>{user.name}</Text>
+            <Text>{user.name}</Text>
+            <Text>{chatRoom.lastMessage.createdAt}</Text>
         </View>
     )
 }
