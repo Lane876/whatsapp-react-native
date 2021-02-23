@@ -1,30 +1,73 @@
-import React from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
-import { ChatRoom } from '../types'
+import React from "react";
+import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import { ChatRoom } from "../types";
+import moment from "moment";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 export type ChatListItemProps = {
-    chatRoom: ChatRoom
-}
+  chatRoom: ChatRoom;
+};
 
-export default function ChatListItem( props: ChatRoom) {
-    const { chatRoom } = props
-    const user = chatRoom.users[1]
-    console.log(user);
-    
+export default function ChatListItem(props: ChatRoom) {
+  const { chatRoom } = props;
+  const user = chatRoom.users[1];
 
-    return (
-        <View>
-            <Image source={{uri: user.imageUri}} style={styles.avatar}/>
-            <Text>{user.name}</Text>
-            <Text>{user.name}</Text>
-            <Text>{chatRoom.lastMessage.createdAt}</Text>
+  const navigation = useNavigation()
+
+  const onClick = () => {
+    navigation.navigate('ChatRoom', { id: chatRoom.id })
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={onClick} >
+      <View style={styles.container}>
+        <View style={styles.leftContainer}>
+          <Image source={{ uri: user.imageUri }} style={styles.avatar} />
+          <View style={styles.midContainer}>
+            <Text style={styles.username}>{user.name}</Text>
+            <Text style={styles.lastMessage}>
+              {chatRoom.lastMessage.content}
+            </Text>
+          </View>
         </View>
-    )
+        <Text style={styles.time}>
+          {moment(chatRoom.lastMessage.createdAt).format("DD/MM/YYYY")}
+        </Text>
+      </View>
+    </TouchableWithoutFeedback>
+  );
 }
 
 const styles = StyleSheet.create({
-    avatar:{
-        width: 50,
-        height: 50
-    }
-})
+  container: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  midContainer: {
+    justifyContent: "space-around",
+  },
+  leftContainer: {
+    flexDirection: "row",
+  },
+  avatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    marginRight: 15,
+  },
+  username: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  lastMessage: {
+    fontSize: 16,
+    color: "grey",
+  },
+  time: {
+    fontSize: 14,
+    color: "grey",
+  },
+});
