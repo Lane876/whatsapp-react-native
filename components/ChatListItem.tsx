@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Image, StyleSheet, Platform } from "react-native";
 import { ChatRoom } from "../types";
 import moment from "moment";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -13,14 +13,14 @@ export default function ChatListItem(props: ChatRoom) {
   const { chatRoom } = props;
   const user = chatRoom.users[1];
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const onClick = () => {
-    navigation.navigate('ChatRoom', { id: chatRoom.id })
-  }
+    navigation.navigate("ChatRoom", { id: chatRoom.id, name: user.name });
+  };
 
   return (
-    <TouchableWithoutFeedback onPress={onClick} >
+    <TouchableWithoutFeedback onPress={onClick}>
       <View style={styles.container}>
         <View style={styles.leftContainer}>
           <Image source={{ uri: user.imageUri }} style={styles.avatar} />
@@ -63,11 +63,29 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   lastMessage: {
-    fontSize: 16,
-    color: "grey",
+    ...Platform.select({
+      ios: {
+        fontSize: 16,
+        color: "grey",
+      },
+      android: {
+        fontSize: 14,
+        color: "grey",
+      },
+    }),
   },
   time: {
     fontSize: 14,
     color: "grey",
+    ...Platform.select({
+      ios: {
+        fontSize: 14,
+        color: "grey",
+      },
+      android: {
+        fontSize: 12,
+        color: "grey",
+      },
+    }),
   },
 });
